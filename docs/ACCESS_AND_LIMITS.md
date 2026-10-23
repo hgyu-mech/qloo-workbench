@@ -1,3 +1,17 @@
+# Current hosted access
+
+The public browser app is https://qloo-workbench.dgrrgddgrrgd.chatgpt.site . Its default mode uses invented fixtures. Live access is restricted by a separate judge password and a durable **64-attempt cumulative** Qloo ledger, including entrant checks, through `2026-11-06T04:45:00Z`. Reset and redeployment do not reset the ledger. Two hosted upstream attempts completed a movie flow; its identical replay used zero new attempts.
+
+This hosted policy is separate from the stopped two-request diagnostic policies below. It does not alter them. Provider free quantity, remaining balance, exact key expiry and billing hard-stop remain unconfirmed. No card, purchase, paid conversion or inquiry email was made for this release. The cutoff and available local attempts cannot guarantee uninterrupted future provider service.
+
+See [WEB_JUDGING.md](WEB_JUDGING.md) for the current public workflow and private judging-access boundary.
+
+---
+
+# Earlier diagnostic access record
+
+The following records the completed private diagnostic stage before the hosted companion. Statements about pending hosting or judging access describe that earlier stage.
+
 # Access and limits
 
 A private live backend diagnostic passed on October 23, 2026. Its access basis

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Qloo Workbench</title>
+  <style nonce="__CSP_NONCE__">
+    :root { font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #22241f; background: #f6f6f2; --ink: #22241f; --muted: #666a60; --line: #d5d7cf; --paper: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input, select { font: inherit; }
+    a { color: inherit; text-underline-offset: 3px; }
+    a:hover { text-decoration-thickness: 2px; }
+    button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    button { min-height: 42px; padding: .65rem .9rem; color: #fff; background: var(--ink); border: 1px solid var(--ink); border-radius: 2px; cursor: pointer; font-weight: 600; }
+    button:hover:not(:disabled) { background: #40443a; }
+    button.secondary { color: var(--ink); background: transparent; }
+    button.secondary:hover:not(:disabled) { background: #eeefe9; }
+    button:disabled { opacity: .42; cursor: not-allowed; }
+    input[type="text"], input[type="password"], select { width: 100%; min-height: 43px; padding: .65rem .7rem; border: 1px solid #989d90; border-radius: 2px; background: #fff; color: var(--ink); }
+    input::placeholder { color: #777d6f; }
+    input[type="radio"] { width: 18px; height: 18px; margin: .25rem 0 0; accent-color: var(--ink); flex: 0 0 auto; }
+    input:disabled, select:disabled { background: #f1f2ed; color: var(--muted); }
+    [hidden] { display: none !important; }
+    .shell { width: min(1320px, 100%); margin: 0 auto; padding: 0 32px; }
+    .site-header { padding-top: 27px; padding-bottom: 24px; display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+    .eyebrow { margin: 0 0 6px; color: var(--muted); font-size: .73rem; font-weight: 650; letter-spacing: .11em; text-transform: uppercase; }
+    h1 { margin: 0; font: 500 clamp(28px, 3vw, 36px)/1.12 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
+    .site-nav { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .83rem; }
+    .mode-bar { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); background: #fff; }
+    .mode-inner { display: flex; align-items: baseline; gap: 14px; padding-top: 12px; padding-bottom: 12px; }
+    #mode-label { white-space: nowrap; font-size: .75rem; font-weight: 750; letter-spacing: .045em; text-transform: uppercase; }
+    #mode-description { margin: 0; font-size: .87rem; color: var(--muted); }
+    .workspace { display: grid; grid-template-columns: 300px minmax(0, 1fr); align-items: stretch; margin-top: 25px; margin-bottom: 28px; border: 1px solid var(--line); background: var(--paper); }
+    .controls { min-width: 0; border-right: 1px solid var(--line); padding: 24px; }
+    .control-step + .control-step { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 22px; }
+    .step-label { margin: 0 0 7px; color: var(--muted); font: .75rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    h2 { margin: 0 0 9px; font-size: 1.05rem; line-height: 1.3; font-weight: 650; letter-spacing: -.02em; }
+    .hint { margin: 0 0 13px; color: var(--muted); font-size: .82rem; line-height: 1.5; }
+    label.caption { display: block; margin: 0 0 6px; font-size: .82rem; font-weight: 650; }
+    .wide { width: 100%; margin-top: 10px; }
+    fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }
+    legend { margin: 0 0 9px; padding: 0; font-size: .82rem; font-weight: 600; }
+    .choice { display: flex; gap: 10px; align-items: start; border-top: 1px solid #e5e7e0; padding: 12px 0; cursor: pointer; }
+    .choice:last-child { border-bottom: 1px solid #e5e7e0; }
+    .choice-text { min-width: 0; }
+    .choice-name { display: block; font-size: .89rem; font-weight: 600; overflow-wrap: anywhere; }
+    .identifier { display: block; color: var(--muted); font: .72rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+    #confirmed-choice { margin: 13px 0 0; font-size: .83rem; border-left: 2px solid var(--ink); padding-left: 10px; overflow-wrap: anywhere; }
+    #expiry { margin: 7px 0 0; color: var(--muted); font-size: .76rem; font-variant-numeric: tabular-nums; }
+    .select-row { display: grid; grid-template-columns: minmax(0, 1fr) 70px; gap: 9px; }
+    .access { margin-top: 25px; border-top: 1px solid var(--line); padding-top: 18px; }
+    details > summary { cursor: pointer; font-size: .83rem; font-weight: 600; }
+    .access-content { padding-top: 13px; }
+    .status-small { margin: 9px 0 0; font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
+    .status-small.error, .workflow-status.error { color: #8a3027; }
+    .results { min-width: 0; padding: 25px 32px 32px; }
+    .result-topline { display: flex; align-items: start; justify-content: space-between; gap: 18px; padding-bottom: 19px; border-bottom: 1px solid var(--line); }
+    .result-topline h2 { font-size: 1.25rem; margin-bottom: 5px; }
+    .result-topline p { margin: 0; color: var(--muted); font-size: .84rem; }
+    #reset { flex: 0 0 auto; padding: .5rem .75rem; min-height: 37px; font-size: .8rem; }
+    .workflow-status { min-height: 42px; margin: 19px 0 0; padding-left: 12px; border-left: 2px solid #8b9182; font-size: .88rem; line-height: 1.55; }
+    .empty-state { max-width: 500px; padding: 54px 0 55px; }
+    .empty-state h3 { margin: 0 0 12px; max-width: 400px; font: 500 26px/1.25 Georgia, "Times New Roman", serif; letter-spacing: -.025em; }
+    .empty-state p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .empty-steps { margin: 23px 0 0; padding-left: 20px; color: var(--muted); font-size: .84rem; }
+    .empty-steps li { padding: 4px 0; }
+    .result-summary { display: flex; justify-content: space-between; align-items: baseline; gap: 15px; padding: 24px 0 11px; font-size: .84rem; }
+    #result-kind { font-weight: 650; }
+    #result-count { color: var(--muted); white-space: nowrap; }
+    .shortlist { list-style: none; counter-reset: results; margin: 0; padding: 0; }
+    .result-item { counter-increment: results; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 20px 0 21px; border-top: 1px solid var(--line); }
+    .result-item::before { content: counter(results, decimal-leading-zero); color: #777d70; font: .8rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .result-name { margin: 0 0 12px; font-size: 1.08rem; font-weight: 650; line-height: 1.4; overflow-wrap: anywhere; }
+    .result-meta { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 5px 12px; margin: 0; font-size: .78rem; line-height: 1.5; }
+    .result-meta dt { color: var(--muted); }
+    .result-meta dd { margin: 0; overflow-wrap: anywhere; }
+    .result-meta dd.code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .74rem; }
+    .score-note { margin: 18px 0 0; color: var(--muted); font-size: .8rem; }
+    .evidence { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .evidence-line { display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 7px 13px; margin: 15px 0 17px; font-size: .8rem; }
+    .evidence-line dt { color: var(--muted); }
+    .evidence-line dd { margin: 0; overflow-wrap: anywhere; }
+    .evidence details + details { margin-top: 13px; }
+    pre { margin: 12px 0 0; padding: 14px; border: 1px solid var(--line); background: #f7f8f4; font: .74rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .readiness { margin-top: 25px; padding-top: 17px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .77rem; color: var(--muted); }
+    .readiness strong { color: var(--ink); font-weight: 600; }
+    #allowance-note { flex-basis: 100%; margin: 0; font-size: .75rem; }
+    footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; padding-bottom: 32px; color: var(--muted); font-size: .8rem; }
+    footer p { margin: 0; max-width: 780px; }
+    footer a { white-space: nowrap; }
+    @media (max-width: 850px) { .shell { padding-left: 20px; padding-right: 20px; } .workspace { grid-template-columns: 280px minmax(0, 1fr); } .controls { padding: 20px; } .results { padding: 22px; } .result-meta { grid-template-columns: 75px minmax(0, 1fr); } }
+    @media (max-width: 690px) { .site-header { display: block; padding-top: 22px; } .site-nav { margin-top: 18px; } .mode-inner { display: block; } #mode-description { margin-top: 4px; } .workspace { display: block; margin-top: 18px; } .controls { border-right: 0; border-bottom: 1px solid var(--line); } .control-step + .control-step { margin-top: 20px; padding-top: 20px; } .results { padding: 22px 20px; } .empty-state { padding: 33px 0; } .empty-state h3 { font-size: 24px; } .result-topline { gap: 12px; } .result-summary { flex-wrap: wrap; gap: 5px; } footer { display: block; } footer a { display: inline-block; margin-top: 13px; } }
+    @media (prefers-reduced-motion: no-preference) { button { transition: background-color .12s ease; } }
+  </style>
+</head>
+<body>
+  <header class="shell site-header">
+    <div><p class="eyebrow">Discover · choose · inspect</p><h1>Qloo Workbench</h1></div>
+    <nav class="site-nav" aria-label="Project resources">
+      <a href="https://github.com/hgyu-mech/qloo-workbench" target="_blank" rel="noopener noreferrer">Source</a>
+      <a href="https://github.com/hgyu-mech/qloo-workbench/releases/tag/2026-10-23-web" target="_blank" rel="noopener noreferrer">Source release</a>
+      <a href="https://github.com/hgyu-mech/qloo-workbench/blob/codex/initial-release/docs/WEB_JUDGING.md" target="_blank" rel="noopener noreferrer">Testing guide</a>
+    </nav>
+  </header>
+  <div class="mode-bar" role="note"><div class="shell mode-inner"><span id="mode-label">Fixture mode</span><p id="mode-description">Invented data. No Qloo API or LLM calls.</p></div></div>
+  <main class="shell">
+    <div class="workspace" id="workspace" aria-busy="true">
+      <aside class="controls" aria-label="Build a shortlist">
+        <section class="control-step" aria-labelledby="resolve-title">
+          <p class="step-label">01 / Start with a phrase</p><h2 id="resolve-title">Find matching tags</h2>
+          <p class="hint" id="query-hint">Fixed invented choices show the workflow. Your phrase does not personalize the fixture data.</p>
+          <form id="resolve-form">
+            <label class="caption" for="query">A public taste phrase</label>
+            <input id="query" name="query" type="text" value="quiet and curious" placeholder="For example, thoughtful science fiction" maxlength="80" required autocomplete="off" aria-describedby="query-help query-hint">
+            <p class="status-small" id="query-help">1–80 characters. No personal information or secrets.</p>
+            <button class="wide" id="resolve" type="submit" disabled>Find choices</button>
+          </form>
+        </section>
+        <section class="control-step" aria-labelledby="confirm-title">
+          <p class="step-label">02 / Your choice</p><h2 id="confirm-title">Select, then confirm</h2>
+          <form id="confirm-form">
+            <fieldset id="choices" disabled><legend>Returned tags</legend><p class="hint" id="choice-placeholder">Find choices to continue. Nothing is selected automatically.</p></fieldset>
+            <button class="wide" id="confirm" type="submit" disabled>Confirm selected tag</button>
+          </form>
+          <p id="confirmed-choice" hidden></p><p id="expiry" hidden></p>
+        </section>
+        <section class="control-step" aria-labelledby="recommend-title">
+          <p class="step-label">03 / Request a shortlist</p><h2 id="recommend-title">Choose the output</h2>
+          <form id="recommend-form">
+            <div class="select-row">
+              <div><label class="caption" for="target">Category</label><select id="target" name="target" disabled><option value="movie">Movies</option><option value="book">Books</option><option value="artist">Artists</option></select></div>
+              <div><label class="caption" for="limit">Items</label><select id="limit" name="limit" disabled><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option></select></div>
+            </div>
+            <button class="wide" id="recommend" type="submit" disabled>Get recommendations</button>
+          </form>
+          <p class="status-small" id="receipt-hint">Confirm one returned tag first. A receipt allows one category and item count.</p>
+        </section>
+        <details class="access" id="live-access">
+          <summary>Live Qloo access for judges</summary>
+          <div class="access-content">
+            <p class="hint">Use the judge access password to switch this session to real Qloo. No provider key is entered here.</p>
+            <form id="unlock-form"><label class="caption" for="judge-password">Judge access password</label><input id="judge-password" name="password" type="password" autocomplete="current-password" maxlength="256" required><button class="wide" id="unlock" type="submit" disabled>Unlock live Qloo</button></form>
+            <button class="secondary wide" id="fixture" type="button" hidden>Return to fixture mode</button>
+            <p class="status-small" id="access-status" role="status" aria-live="polite"></p>
+          </div>
+        </details>
+      </aside>
+      <section class="results" aria-labelledby="shortlist-title">
+        <div class="result-topline"><div><h2 id="shortlist-title">Your shortlist</h2><p>Grounded in the exact tag you confirm.</p></div><button class="secondary" id="reset" type="button">Reset choices</button></div>
+        <p class="workflow-status" id="workflow-status" role="status" aria-live="polite">Starting an invented fixture session…</p>
+        <div class="empty-state" id="empty-state"><h3>A phrase opens the search.<br>Your choice sets the direction.</h3><p>Inspect up to three returned tags on the left. Confirm one, then see a shortlist with its source and identifiers.</p><ol class="empty-steps"><li>Resolve the phrase into returned tags.</li><li>Choose and explicitly confirm a tag.</li><li>Inspect the recommendations and their evidence.</li></ol></div>
+        <div id="result-content" hidden>
+          <div class="result-summary"><span id="result-kind"></span><span id="result-count"></span></div>
+          <ol class="shortlist" id="shortlist" aria-label="Recommendations"></ol>
+          <p class="score-note" id="score-note">Affinity and popularity are provider scores, when supplied. They are not a probability that you will like an item.</p>
+        </div>
+        <section class="evidence" id="evidence" aria-labelledby="evidence-title" hidden>
+          <h2 id="evidence-title">Source & execution</h2>
+          <dl class="evidence-line"><dt>Data source</dt><dd id="source-name">—</dd><dt>Choice</dt><dd id="source-choice">No confirmed choice.</dd><dt>Request</dt><dd id="request-kind">—</dd></dl>
+          <details id="resolve-evidence" hidden><summary>Tag resolution evidence</summary><pre id="resolve-source"></pre></details>
+          <details id="recommend-evidence" hidden><summary>Recommendation evidence</summary><pre id="recommend-source"></pre></details>
+          <p class="status-small">Reference: <a id="docs-tags" href="https://docs.qloo.com/reference/get-tags" target="_blank" rel="noopener noreferrer">Qloo tags</a> · <a id="docs-insights" href="https://docs.qloo.com/reference/insights-api-deep-dive" target="_blank" rel="noopener noreferrer">Qloo Insights</a></p>
+        </section>
+        <div class="readiness" id="readiness" aria-label="Session readiness"><span>Mode: <strong id="readiness-mode">Fixture</strong></span><span>Backend calls: <strong id="backend-count">—</strong></span><span>App allowance: <strong id="app-allowance">—</strong></span><p id="allowance-note">App safeguards are not a claim about the provider’s quota.</p></div>
+      </section>
+    </div>
+    <footer><p>This page runs the manual resolve → confirm → recommend workflow. It does not run an LLM. The source release also exposes four MCP tools for a compatible model host. A local choice receipt records the selected tag; it does not authenticate a person.</p><a href="https://github.com/hgyu-mech/qloo-workbench/blob/codex/initial-release/docs/LLM_HOST.md" target="_blank" rel="noopener noreferrer">MCP host instructions</a></footer>
+  </main>
+  <script nonce="__CSP_NONCE__">
+    "use strict";
+    const byId = (id) => document.getElementById(id);
+    const state = { csrf: "", mode: "fixture", ready: null, resolution: null, receipt: null, selected: null, lockedRequest: null, expiresAt: null, sessionExpiresAt: null, sessionExpired: false, sessionExpiryAnnounced: false, expired: false, busy: false };
+    const expiredCodes = new Set(["unknown_or_expired_resolution", "expired_receipt", "invalid_receipt", "session_expired", "session_required", "session_not_found", "invalid_session", "csrf_invalid", "invalid_csrf", "csrf_failed", "csrf_rejected"]);
+    const stoppedCodes = new Set(["session_stopped", "budget_exhausted", "local_call_budget_exhausted", "policy_expired", "live_access_disabled", "backend_failed"]);
+    class WorkflowError extends Error { constructor(code, message, httpStatus = null) { super(message); this.name = "WorkflowError"; this.code = code; this.httpStatus = httpStatus; } }
+    function status(message, error = false) { byId("workflow-status").textContent = message; byId("workflow-status").classList.toggle("error", error); }
+    function accessStatus(message, error = false) { byId("access-status").textContent = message; byId("access-status").classList.toggle("error", error); }
+    function text(value, fallback = "Not supplied") { return typeof value === "string" && value.length ? value : fallback; }
+    function scalar(value, fallback = "—") { return typeof value === "number" && Number.isFinite(value) ? String(value) : fallback; }
+    function timestamp(value) {
+      if (typeof value === "string" && /^\d+(?:\.\d+)?$/.test(value)) value = Number(value);
+      if (typeof value === "number" && Number.isFinite(value)) return value > 1000000000000 ? value : value * 1000;
+      if (typeof value === "string") { const parsed = Date.parse(value); if (Number.isFinite(parsed)) return parsed; }
+      return null;
+    }
+    function setMode(mode) {
+      if (mode !== "fixture" && mode !== "live") return;
+      state.mode = mode;
+      byId("mode-label").textContent = mode === "live" ? "Live Qloo" : "Fixture mode";
+      byId("mode-description").textContent = mode === "live" ? "Real Qloo data. Requests use the shared app allowance. No LLM runs on this page." : "Invented data. No Qloo API or LLM calls.";
+      byId("readiness-mode").textContent = mode === "live" ? "Live Qloo" : "Fixture";
+      byId("query-hint").textContent = mode === "live" ? "Resolve a public taste phrase into up to three Qloo tags. You decide which returned tag to confirm." : "Fixed invented choices show the workflow. Your phrase does not personalize the fixture data.";
+      byId("fixture").hidden = mode !== "live";
+      byId("unlock-form").hidden = mode === "live";
+    }
+    function renderReadiness(value) {
+      if (!value || typeof value !== "object") return;
+      state.ready = value; setMode(value.mode);
+      byId("backend-count").textContent = scalar(value.backend_calls) + (typeof value.backend_call_limit === "number" ? " / " + value.backend_call_limit : "");
+      byId("app-allowance").textContent = typeof value.remaining_http_attempts === "number" ? value.remaining_http_attempts + " requests remaining" : "Not supplied";
+      byId("allowance-note").textContent = state.mode === "fixture" ? "Local fixture calls only. No provider quota or billing claim." : text(value.limitation, "Shared app safeguard; provider quota and billing terms are not established by this counter.");
+    }
+    function ingest(body) {
+      if (typeof body.csrf === "string" && body.csrf.length <= 512) state.csrf = body.csrf;
+      if (body.readiness) renderReadiness(body.readiness);
+      const result = body.result && typeof body.result === "object" ? body.result : body;
+      const sessionExpiry = body.session_expires_at ?? (body.session && body.session.expires_at) ?? result.session_expires_at ?? (result.session && result.session.expires_at) ?? (body.readiness && body.readiness.session_expires_at);
+      if (sessionExpiry !== undefined && sessionExpiry !== null) { state.sessionExpiresAt = timestamp(sessionExpiry); state.sessionExpired = !!state.sessionExpiresAt && state.sessionExpiresAt <= Date.now(); if (state.sessionExpired) state.expired = true; else state.sessionExpiryAnnounced = false; }
+      if (result.operation === "readiness") renderReadiness(result);
+      else if (result.mode) setMode(result.mode);
+      return result;
+    }
+    async function request(path, payload) {
+      const options = { credentials: "same-origin", cache: "no-store", headers: { "Accept": "application/json" } };
+      if (payload !== undefined) { options.method = "POST"; options.headers["Content-Type"] = "application/json"; options.headers["X-CSRF-Token"] = state.csrf; options.body = JSON.stringify(payload); }
+      let response;
+      try { response = await fetch(path, options); } catch (_) { throw new WorkflowError("connection_failed", "The request could not reach this session. Check the connection, then try again."); }
+      let body;
+      try { body = await response.json(); } catch (_) { throw new WorkflowError("invalid_response", "The session returned an unreadable response. No automatic retry was attempted."); }
+      if (!body || typeof body !== "object") throw new WorkflowError("invalid_response", "The session returned an invalid response.");
+      const result = ingest(body);
+      if (!response.ok || result.status === "error" || body.ok === false) {
+        const error = result.error || body.error || {};
+        throw new WorkflowError(text(error.code, "request_failed").toLowerCase(), typeof error === "string" ? error : text(error.message, "This request could not be completed. No automatic retry was attempted."), response.status);
+      }
+      return result;
+    }
+    async function refreshReadiness() {
+      try { await request("/api/readiness"); } catch (_) { byId("allowance-note").textContent = "Readiness could not be refreshed. No backend request was retried."; }
+    }
+    function controls() {
+      const selected = document.querySelector('input[name="tag"]:checked');
+      byId("workspace").setAttribute("aria-busy", String(state.busy));
+      byId("query").disabled = state.busy;
+      byId("resolve").disabled = state.busy || !state.csrf || state.sessionExpired || (state.ready && state.ready.ready_for_calls === false);
+      byId("choices").disabled = state.busy || !state.resolution || !!state.receipt || state.expired || state.sessionExpired;
+      byId("confirm").disabled = state.busy || !state.resolution || !!state.receipt || state.expired || state.sessionExpired || !selected;
+      byId("target").disabled = state.busy || !state.receipt || !!state.lockedRequest || state.expired || state.sessionExpired;
+      byId("limit").disabled = state.busy || !state.receipt || !!state.lockedRequest || state.expired || state.sessionExpired;
+      byId("recommend").disabled = state.busy || !state.receipt || state.expired || state.sessionExpired || (!state.lockedRequest && state.ready && state.ready.ready_for_calls === false);
+      byId("recommend").textContent = state.lockedRequest ? "Replay cached result" : "Get recommendations";
+      byId("reset").disabled = state.busy;
+      byId("unlock").disabled = state.busy || !state.csrf || state.sessionExpired;
+      byId("judge-password").disabled = state.busy;
+      byId("fixture").disabled = state.busy;
+    }
+    async function action(fn, channel = "workflow") {
+      if (state.busy) return;
+      state.busy = true; controls();
+      try { await fn(); }
+      catch (error) {
+        let message = error instanceof WorkflowError ? error.message : "This action could not be completed. No automatic retry was attempted.";
+        if (expiredCodes.has(error.code)) { state.expired = true; if (/session|csrf/.test(error.code)) state.sessionExpired = true; message += " Reset choices to start again; unlock live access again if the session expired."; }
+        else if (stoppedCodes.has(error.code)) { message += " Reset clears choices only; it does not restore an exhausted allowance or restart a stopped live session."; }
+        if (channel === "access") accessStatus(message, true); else status(message, true);
+      } finally { state.busy = false; renderExpiry(); controls(); }
+    }
+    function clearFlow() {
+      state.resolution = null; state.receipt = null; state.selected = null; state.lockedRequest = null; state.expiresAt = null; state.expired = false;
+      byId("choices").replaceChildren();
+      const legend = document.createElement("legend"); legend.textContent = "Returned tags";
+      const hint = document.createElement("p"); hint.className = "hint"; hint.id = "choice-placeholder"; hint.textContent = "Find choices to continue. Nothing is selected automatically.";
+      byId("choices").append(legend, hint);
+      byId("confirmed-choice").hidden = true; byId("confirmed-choice").textContent = ""; byId("expiry").hidden = true;
+      byId("shortlist").replaceChildren(); byId("result-content").hidden = true; byId("empty-state").hidden = false; byId("evidence").hidden = true;
+      byId("source-choice").textContent = "No confirmed choice."; byId("request-kind").textContent = "—";
+      for (const prefix of ["resolve", "recommend"]) { byId(prefix + "-source").textContent = ""; byId(prefix + "-evidence").hidden = true; }
+      byId("receipt-hint").textContent = "Confirm one returned tag first. A receipt allows one category and item count.";
+    }
+    function expires(value) {
+      state.expiresAt = timestamp(value); renderExpiry();
+    }
+    function renderExpiry() {
+      if (state.sessionExpiresAt && state.sessionExpiresAt <= Date.now() && !state.sessionExpiryAnnounced) { state.sessionExpired = true; state.expired = true; state.sessionExpiryAnnounced = true; status("This session expired. Reset choices to start a new fixture session, then unlock live access again if needed.", true); controls(); }
+      if (!state.resolution) { byId("expiry").hidden = true; return; }
+      byId("expiry").hidden = false;
+      const expiry = state.expiresAt && state.sessionExpiresAt ? Math.min(state.expiresAt, state.sessionExpiresAt) : (state.expiresAt || state.sessionExpiresAt);
+      if (!expiry) { byId("expiry").textContent = "This choice expires with its session."; return; }
+      const remaining = Math.max(0, Math.ceil((expiry - Date.now()) / 1000));
+      byId("expiry").textContent = remaining ? "Choice expires in " + Math.floor(remaining / 60) + ":" + String(remaining % 60).padStart(2, "0") : "Choice expired. Reset to continue.";
+      if (!remaining && !state.expired) { state.expired = true; status("This choice expired. Reset, then resolve and confirm again.", true); controls(); }
+    }
+    function evidence(prefix, result) {
+      const canonical = result.canonical || {}, provenance = canonical.provenance || {}, execution = canonical.execution || {};
+      const allowedDocs = new Set(["https://docs.qloo.com/reference/get-tags", "https://docs.qloo.com/reference/insights-api-deep-dive"]);
+      const safe = { mode: result.mode, data_source: result.data_source, status: result.status, cached_receipt_replay: result.cached_receipt_replay === true,
+        provenance: { source: provenance.source, endpoint: provenance.endpoint, documentation: allowedDocs.has(provenance.documentation) ? provenance.documentation : "Reference not supplied" },
+        execution: { transport: execution.transport, transport_name: execution.transport_name, correlation_id: execution.correlation_id, duration_ms: execution.duration_ms } };
+      byId(prefix + "-source").textContent = JSON.stringify(safe, null, 2); byId(prefix + "-evidence").hidden = false; byId("evidence").hidden = false;
+      byId("source-name").textContent = text(provenance.source, state.mode === "live" ? "Qloo API" : "Invented offline fixture");
+    }
+    function renderCandidates(result) {
+      const candidates = Array.isArray(result.candidates) ? result.candidates.slice(0, 3) : [];
+      if (result.status !== "needs_confirmation" || !candidates.length || typeof result.resolution_id !== "string") { status("No tags were returned. Try another public phrase; no recommendation was requested."); return; }
+      state.resolution = result.resolution_id; byId("choice-placeholder").remove();
+      candidates.forEach((candidate, index) => {
+        if (!candidate || typeof candidate.id !== "string") return;
+        const label = document.createElement("label"); label.className = "choice";
+        const radio = document.createElement("input"); radio.type = "radio"; radio.name = "tag"; radio.id = "tag-" + index; radio.value = candidate.id; radio.required = true;
+        const content = document.createElement("span"); content.className = "choice-text";
+        const name = document.createElement("span"); name.className = "choice-name"; name.textContent = text(candidate.name, text(candidate.label, "Unnamed returned tag"));
+        const identifier = document.createElement("span"); identifier.className = "identifier"; identifier.textContent = candidate.id;
+        content.append(name, identifier); label.append(radio, content); byId("choices").append(label); radio.addEventListener("change", controls);
+      });
+      expires(result.expires_at); status("Choose one returned tag, then confirm it. No tag has been selected for you.");
+    }
+    function meta(list, label, value, code = false) { const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = label; dd.textContent = value; if (code) dd.className = "code"; list.append(dt, dd); }
+    function renderRecommendations(result) {
+      const items = Array.isArray(result.recommendations) ? result.recommendations : (Array.isArray(result.shortlist) ? result.shortlist : []);
+      byId("shortlist").replaceChildren();
+      items.slice(0, 3).forEach((item) => {
+        const row = document.createElement("li"); row.className = "result-item";
+        const content = document.createElement("div"), name = document.createElement("h3"), data = document.createElement("dl"); name.className = "result-name"; name.textContent = text(item.name, text(item.label, "Unnamed returned item")); data.className = "result-meta";
+        meta(data, "Entity ID", text(item.entity_id, text(item.id)), true); meta(data, "Type", text(item.type), true); meta(data, "Subtype", text(item.subtype), true);
+        if (typeof item.affinity === "number" && Number.isFinite(item.affinity)) meta(data, "Affinity", String(item.affinity));
+        if (typeof item.popularity === "number" && Number.isFinite(item.popularity)) meta(data, "Popularity", String(item.popularity));
+        content.append(name, data); row.append(content); byId("shortlist").append(row);
+      });
+      const cached = result.cached_receipt_replay === true;
+      byId("result-kind").textContent = cached ? "Cached replay · no new backend request" : (state.mode === "live" ? "Fresh Qloo result" : "Invented fixture result");
+      byId("result-count").textContent = items.length + (items.length === 1 ? " item returned" : " items returned");
+      byId("empty-state").hidden = true; byId("result-content").hidden = false;
+      byId("request-kind").textContent = cached ? "Identical receipt replay. 0 new Qloo or fixture backend requests." : "A fresh " + (state.mode === "live" ? "Qloo" : "fixture") + " request for the confirmed tag.";
+      byId("score-note").textContent = "Affinity and popularity are provider scores, when supplied. They are not a probability that you will like an item.";
+      byId("receipt-hint").textContent = "Category and item count are locked to this receipt. Repeat to inspect the cache, or reset for another choice.";
+      evidence("recommend", result);
+      status(cached ? "Cached result returned. No additional backend request." : (items.length ? "Shortlist returned. Inspect each identifier and the source evidence below." : "No matching items were returned. This receipt is complete; reset to make a new choice."));
+    }
+    async function startFixture() { clearFlow(); await request("/api/session", { mode: "fixture" }); setMode("fixture"); await refreshReadiness(); accessStatus(""); status("Fixture session ready. Start with a phrase; all fixture choices and results are invented."); }
+    byId("resolve-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      const query = byId("query").value.trim(); if (!query || query.length > 80) throw new WorkflowError("invalid_query", "Enter a public taste phrase from 1 to 80 characters.");
+      clearFlow(); status("Finding matching tags…"); const result = await request("/api/resolve", { query }); evidence("resolve", result); renderCandidates(result); await refreshReadiness();
+    }); });
+    byId("confirm-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      const selected = document.querySelector('input[name="tag"]:checked'); if (!selected || !state.resolution) throw new WorkflowError("selection_required", "Select one returned tag first.");
+      const result = await request("/api/confirm", { resolution_id: state.resolution, tag_id: selected.value });
+      if (result.status !== "confirmed" || typeof result.receipt !== "string") throw new WorkflowError("invalid_confirmation", "The selected tag was not confirmed.");
+      state.receipt = result.receipt; state.selected = result.selected_tag || { id: selected.value, name: "Selected tag" }; expires(result.expires_at);
+      byId("confirmed-choice").textContent = "Confirmed by your click: " + text(state.selected.name, text(state.selected.label, "Selected tag")); byId("confirmed-choice").hidden = false;
+      byId("source-choice").textContent = text(state.selected.name, text(state.selected.label, "Selected tag")) + " · " + text(state.selected.id);
+      status("Your exact tag is confirmed. Choose a category and item count."); await refreshReadiness();
+    }); });
+    byId("recommend-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      if (!state.receipt) throw new WorkflowError("confirmation_required", "Confirm one returned tag before requesting recommendations.");
+      const requestValue = state.lockedRequest || { target_type: byId("target").value, limit: Number(byId("limit").value) };
+      status(state.lockedRequest ? "Reading the cached result…" : "Requesting the shortlist…");
+      const result = await request("/api/recommend", { receipt: state.receipt, target_type: requestValue.target_type, limit: requestValue.limit });
+      if (result.status !== "ok" && result.status !== "empty") throw new WorkflowError("invalid_recommendation", "The shortlist did not complete.");
+      state.lockedRequest = requestValue; renderRecommendations(result); await refreshReadiness();
+    }); });
+    byId("reset").addEventListener("click", () => action(async () => {
+      status("Resetting the choice workflow…");
+      try { await request("/api/reset", {}); }
+      catch (error) { if (!expiredCodes.has(error.code) && error.httpStatus !== 401 && error.httpStatus !== 403 && state.csrf) throw error; await request("/api/session", { mode: "fixture" }); await request("/api/reset", {}); setMode("fixture"); }
+      clearFlow(); await refreshReadiness(); status("Choices cleared. Request allowance and stopped-session safeguards were not reset."); byId("query").focus();
+    }));
+    byId("unlock-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      const password = byId("judge-password").value; if (!password) throw new WorkflowError("password_required", "Enter the judge access password.");
+      accessStatus("Checking judge access…");
+      try { await request("/api/unlock", { password }); await refreshReadiness(); if (state.mode !== "live") throw new WorkflowError("live_unavailable", "Live Qloo is not available for this session."); clearFlow(); accessStatus("Live access unlocked for this session."); status("Live Qloo session ready. Resolve a public phrase, choose a returned tag, and confirm it."); }
+      finally { byId("judge-password").value = ""; }
+    }, "access"); });
+    byId("fixture").addEventListener("click", () => action(startFixture));
+    setInterval(renderExpiry, 1000);
+    action(startFixture);
+  </script>
+</body>
+</html>

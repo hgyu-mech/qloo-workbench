@@ -1,3 +1,9 @@
+# Choose a judging path
+
+For the externally hosted manual browser companion, use [WEB_JUDGING.md](WEB_JUDGING.md). It starts in fixture mode, with judge-only live access supplied privately. The browser runs no LLM. The agent/MCP workflow and its local keyless tests follow below; [LLM_HOST.md](LLM_HOST.md) describes the separately verified model integration.
+
+---
+
 # Testing instructions
 
 ## Verified state

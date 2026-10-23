@@ -1,0 +1,11 @@
+{
+  "name": "qloo-workbench-judge-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "validate": "node scripts/validate-artifact.mjs",
+    "test": "node --test test/*.test.mjs",
+    "dev": "node scripts/preview.mjs"
+  }
+}

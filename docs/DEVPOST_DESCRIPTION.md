@@ -1,139 +1,41 @@
-# Devpost description draft
+# Qloo Workbench
 
-This is an English preparation draft. It has not been submitted. Replace the
-status section with verified evidence only after the remaining gates pass.
-The authenticated Devpost form and its exact field layout have not been
-inspected; the sections below are draft copy, not a claim about form fields.
+## Inspiration
 
-## Project name
+A phrase such as "quiet and curious" leaves room for interpretation. An agent can sound confident while choosing a meaning the user never intended. Qloo Workbench makes that choice visible before it requests a shortlist.
 
-Qloo Workbench
+## What it does
 
-## Short description
+Resolve a public taste phrase into up to three Qloo tags, inspect their exact labels, and explicitly confirm one. A session receipt binds that returned ID to a recommendation request for up to three movies, books, or artists. Results preserve the selected tag, returned entity IDs, type and subtype, source provenance, and provider scores when supplied.
 
-An agent's taste interpretation should be a choice you can inspect. These MCP
-tools confirm a returned tag before requesting a Qloo shortlist, preserving
-the chosen ID, source evidence, and cached replay history.
+An altered or unconfirmed receipt cannot request a recommendation. Repeating the identical successful request returns its cached result without another Qloo call. Reset clears the choices without replenishing the shared allowance. The receipt records a session choice; it does not authenticate a person or establish their preferences.
 
-## The problem
+The public browser starts with clearly invented fixtures. Judges can unlock real Qloo with the separately supplied access password; they never enter the provider key. The browser is a manual core-workflow companion and runs no LLM.
 
-A taste request can be ambiguous. If an agent silently chooses a tag and then
-recommends items, the user may receive a plausible list built on a meaning they
-never intended. Qloo Workbench makes that choice visible before a
-recommendation request is allowed.
+## Agent integration and implementation
 
-## What the application does
+The agent path exposes four stdio MCP tools: `taste_resolve`, `taste_confirm`, `taste_recommend`, and `taste_readiness`. A compatible model client supplies the model. The Python standard-library core uses a pinned `@qloo/qloo-harness@0.1.26` adapter for live execution. The browser's JavaScript Worker calls the official event API directly, with D1-backed receipts, sessions, and cumulative attempt reservation.
 
-The client calls `taste_resolve` with a short taste phrase. The backend returns
-up to three candidate tags. The client shows those exact labels and asks the
-user to choose. `taste_confirm` accepts one returned `selected_tag_id` and
-issues a local opaque receipt.
+Both live paths restrict the upstream host and routes, result size, response size, and timeout. There is no automatic retry or fallback to invented data. Provider text is treated as data. The web service also checks request origin, CSRF tokens, session expiry, and judge unlock limits, and bounds fixture requests and expired-record cleanup.
 
-Only a valid receipt permits `taste_recommend` to request movies, books, or
-artists. The request carries the chosen tag and returns at most three items.
-The result preserves returned entity IDs and names together with backend
-provenance. Missing choices, unknown IDs, cross-session receipts, and altered
-receipt replays cannot trigger a new recommendation call.
+## Challenges and lessons
 
-An identical replay of a successful request returns cached data. A backend
-failure stops further calls in that session. A receipt records a local choice;
-it does not prove human identity or authenticate a user.
+Real Qloo responses exposed a response limit that was too small and a generic entity type paired with a concrete movie subtype. Private response replay reproduced those failures. The implementation now aligns its body cap with the pinned official client, preserves returned type/subtype, and rejects mismatches. A separate review caught unbounded fixture records in the public service, leading to durable request limits and bounded cleanup that preserves the upstream ledger.
 
-## Qloo's role
+These changes keep the choice, evidence, and execution state inspectable. An affinity score is not a probability that a person will like an item.
 
-The live path uses `qloo_find_tags` for semantic tag discovery and
-`qloo_recommend` for the shortlist, through
-`@qloo/qloo-harness@0.1.26`. Qloo supplies the taste resolution and
-recommendation data. The application adds explicit confirmation, bounded
-execution, session receipts, and a minimal projection of source evidence.
+## Verified behavior
 
-The workbench does not train a preference model or describe an affinity score
-as a person's preference probability. It does not invent item-specific Qloo
-explanations when none are returned. Provider text remains untrusted data.
+- A real Codex CLI `gpt-6.1-sol` session completed resolve, confirm, movie recommendation, cached replay, and readiness through MCP. It used one tag request and one Insights request, both HTTP 200, returning three movie records. The harness supplied its test choice; this was not a two-turn human preference study.
+- The publicly hosted browser separately completed real tag lookup, explicit selection and confirmation, three movie results, and cached replay. Its shared count remained 2/64 after replay; confirmation and replay used no extra upstream requests.
+- Local checks passed 106 guarded Python core tests, 14 loopback preview HTTP tests, 26 Node fake-transport tests, and 27 Worker/D1 web tests. Session expiry/reset recovery was checked in the local browser; hosted deployment and ledger persistence were checked separately.
 
-## How it is built
+Actual API verification covers movies. Books and artists are implemented targets but have not received equivalent live verification. No separate model API key was used for the verified model run.
 
-A Python standard-library service exposes `taste_resolve`, `taste_confirm`,
-`taste_recommend`, and a local `taste_readiness` tool over stdio MCP.
-The product backend is injectable, allowing the same choice flow to be tested
-with invented canonical-shaped fixtures.
+## Try it and access limits
 
-A local browser preview uses that same core for explicit click-based choices,
-source inspection, replay, and reset. It uses invented fixtures only and does
-not run an LLM or a live API. It is not a public judging endpoint.
+[Open Qloo Workbench](https://qloo-workbench.dgrrgddgrrgd.chatgpt.site). Fixture mode requires no key and makes no Qloo or LLM calls. Judges receive live-access instructions privately. [Browser guide](https://github.com/hgyu-mech/qloo-workbench/blob/codex/initial-release/docs/WEB_JUDGING.md) and [MCP host guide](https://github.com/hgyu-mech/qloo-workbench/blob/codex/initial-release/docs/LLM_HOST.md) explain the two paths.
 
-The optional live host uses a pinned Node.js adapter. A reviewed private
-access policy must pass before credential access or child startup. The
-transport restricts the host, request count, response size, redirects,
-retries, and fallback behavior. A policy file records reviewed terms; it
-cannot disable billing at the provider.
-[Access policy details](ACCESS_AND_LIMITS.md)
+The hosted live safeguard is 64 cumulative Qloo HTTP attempts, including entrant checks, with a cutoff of November 6, 2026 at 13:45 KST. Reset and redeployment do not refill it. This is not a provider free balance: numerical provider quota, remaining balance, exact key expiry and billing hard-stop remain unconfirmed. No card, purchase, or paid conversion was added. Future availability depends on the provider and host as well as the remaining app allowance.
 
-The LLM is supplied by a compatible MCP client. The service itself does not
-run a model. Actual Codex CLI / `gpt-6.1-sol` sessions completed the fixture
-flow and a separately reviewed real Qloo movie flow using the owner's existing
-ChatGPT subscription. The tests supplied exact choices in advance; neither
-was a human preference confirmation.
-[Host setup and verified scope](LLM_HOST.md)
-
-## What has been verified
-
-Offline checks exercise receipt gating, exact selected-tag propagation,
-replay behavior, cross-session rejection, expiry, canonical result projection,
-failure stops, fake credential reflection, and transport boundaries using
-fake responses. The current offline core checks passed 106 Python tests and
-26 Node tests. A launcher subprocess also completed the fixture MCP sequence.
-Fourteen separate actual loopback HTTP checks cover the local browser preview.
-
-A separate fresh live diagnostic completed tag resolution, a scripted
-selection of a returned exact match, local confirmation, and three movie
-recommendations. It used two HTTP requests. Replaying the successful receipt
-returned the same result without another request. The earlier backend
-diagnostic series made nine HTTP attempts, all 200. Local driver,
-response-size, and schema issues were corrected before its final fresh run.
-A later actual model-host live session completed five MCP calls
-and received three movie records using two fresh HTTP requests, both 200.
-Its identical replay was cached. The aggregate is eleven HTTP attempts. The
-separate fixture model run used zero Qloo HTTP requests. Exact test choices
-were supplied by the harness, not by a user expressing a personal preference.
-
-The default walkthrough explicitly labels all tags and entities as invented
-and makes a scripted choice. It is a demonstration of the workflow, not a
-real Qloo recommendation or proof of human confirmation.
-
-## Current submission status
-
-- The private backend and combined model-host movie flows passed. Eleven HTTP attempts across the
-  reviewed diagnostics returned 200, with no observed authentication, payment,
-  or rate-limit errors. Real book/artist output has not been verified.
-- The successful two-request run used a separate v2 review with
-  `costCertainty: inferred-not-provider-guarantee`, a shared cumulative
-  two-attempt ledger, and a cutoff within 30 minutes. The v1 public example
-  retains its false/null values.
-- Numerical quota, rate, remaining balance/reset, exact provider expiry, and
-  an explicit billing hard-stop remain unknown. No payment method, purchase,
-  paid conversion, or inquiry email was added. This is not proof of a zero bill.
-- Real model-host sessions completed fixture and live movie tool flows.
-  Two-turn human choice remains unverified. The automated
-  test's supplied selection is not a user preference endorsement.
-- Licensed source is published at
-  [hgyu-mech/qloo-workbench](https://github.com/hgyu-mech/qloo-workbench).
-  Independent functional judge access remains unverified.
-- No final Devpost submission is represented by this draft.
-
-The current submission rules require a functioning application using Qloo,
-licensed public source with English materials, and free access for judging.
-The private live diagnostic establishes actual Qloo behavior for its checked
-flow; public application access and full judging readiness remain incomplete.
-[Official submission rules](https://qloo.devpost.com/rules)
-
-## Next verification
-
-Validate a real user's explicit selection and independent
-judge access. Retain the checked backend's bounded requests, source metadata,
-receipt behavior, and private attempt count. Keep actual API IDs, names,
-responses, and transcripts out of the public repository, as required by the
-[official developer guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide).
-
-The repository URL, functional application link, and any optional video link
-must be supplied only after they exist and have been checked.
+The [MIT source](https://github.com/hgyu-mech/qloo-workbench) and [source release](https://github.com/hgyu-mech/qloo-workbench/releases/tag/2026-10-23-web) include the complete MCP and browser implementations, English instructions, and invented fixtures. API keys, judge credentials, real Qloo responses, private caches, and live transcripts are excluded.
