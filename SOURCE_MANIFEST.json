@@ -1,6 +1,7 @@
 {
   "schema": "qloo-source-manifest-v1",
   "files": {
+    ".gitattributes": "4441184e90cc075a36fdb18a2fbb53fa8d5011cae581ac01bc63af6d792fc1d3",
     ".gitignore": "421161d3db0c489dea55f8e71dc390da0847698d5f394b49eb51c9140c8c693d",
     "LICENSE": "192ecfbcd0e19b6441d46bf4d2097e0a482492acc50a554cf067073276e3ab34",
     "README.md": "c56e7979bd278c89b8b9901d84b9dabfc4ab11b1b60f1ceb0d658cc206a16748",
