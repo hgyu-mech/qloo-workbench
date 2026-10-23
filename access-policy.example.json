@@ -1,0 +1,12 @@
+{
+  "schema": "qloo-event-access-v1",
+  "complimentaryConfirmed": false,
+  "noOverageChargesConfirmed": false,
+  "providerEvidence": null,
+  "verifiedAt": null,
+  "validUntil": null,
+  "maxHttpAttempts": 4,
+  "monthlyQuota": null,
+  "rateLimitPerSecond": null,
+  "providerExactExpiry": null
+}

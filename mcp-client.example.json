@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "qloo_workbench_fixture": {
+      "command": "REPLACE_WITH_ABSOLUTE_PYTHON_PATH",
+      "args": [
+        "REPLACE_WITH_ABSOLUTE_PROJECT_PATH/qloo_workbench_mcp.py",
+        "--mode",
+        "demo"
+      ]
+    }
+  }
+}

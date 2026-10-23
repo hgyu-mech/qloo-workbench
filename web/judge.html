@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taste Workbench · Local preview</title>
+  <style nonce="__CSP_NONCE__">
+    :root { color-scheme: light; font: 16px/1.55 system-ui, sans-serif; color: #202322; background: #faf9f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .mode { position: sticky; top: 0; z-index: 2; padding: .7rem 1.4rem; color: #fff; background: #263c36; font-weight: 650; text-align: center; }
+    main { max-width: 1060px; margin: 0 auto; padding: 2.7rem 2rem 5rem; }
+    header { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; margin-bottom: 2.7rem; }
+    .eyebrow { margin: 0 0 .6rem; font-size: .78rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; color: #52645c; }
+    h1 { margin: 0; font: 500 clamp(2.4rem, 6vw, 4rem)/1.05 Georgia, serif; letter-spacing: -.045em; }
+    .intro { max-width: 660px; margin: 1rem 0 0; color: #535d58; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; padding: .7rem 1.1rem; border: 1px solid #283e35; border-radius: 2px; background: #283e35; color: white; font-weight: 600; }
+    button.secondary { background: transparent; color: #283e35; white-space: nowrap; }
+    button:disabled { opacity: .42; cursor: not-allowed; }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #cb8c29; outline-offset: 3px; }
+    input[type=text], select { border: 1px solid #929b94; border-radius: 2px; padding: .7rem .8rem; color: #202322; background: #fff; }
+    input[type=text] { width: 100%; }
+    .step { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 1rem; padding: 2rem 0; border-top: 1px solid #b5bcb5; }
+    .number { font: 400 1.5rem Georgia, serif; color: #62786a; }
+    h2 { margin: 0 0 .55rem; font-size: 1.24rem; letter-spacing: -.025em; }
+    p { margin: .5rem 0 1rem; }
+    .hint, .meta { color: #5c655f; font-size: .91rem; }
+    .row { display: flex; gap: .75rem; align-items: end; }
+    .row .grow { flex: 1; }
+    label.caption { display: block; font-size: .9rem; font-weight: 650; margin-bottom: .4rem; }
+    fieldset { margin: 1.2rem 0; padding: 0; border: 0; min-width: 0; }
+    legend { font-size: .9rem; font-weight: 650; margin-bottom: .6rem; }
+    .choice { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: .6rem; padding: .8rem 0; border-bottom: 1px solid #dedfd7; cursor: pointer; }
+    .choice input { margin-top: .4rem; accent-color: #283e35; }
+    .choice small { display: block; color: #616b64; overflow-wrap: anywhere; }
+    #confirmed { padding-left: .8rem; border-left: 3px solid #526f5c; margin: 1rem 0 0; }
+    .shortlist { padding-left: 1.4rem; }
+    .shortlist li { padding: .6rem 0 .8rem .3rem; border-bottom: 1px solid #dedfd7; }
+    .shortlist strong { display: block; }
+    .shortlist small { display: block; color: #5c655f; overflow-wrap: anywhere; }
+    details { margin-top: 1.1rem; }
+    summary { cursor: pointer; font-size: .91rem; font-weight: 650; }
+    pre { background: #f0f1ea; padding: 1rem; font: .82rem/1.55 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .status { min-height: 1.6rem; color: #314c3d; margin: .8rem 0; }
+    .status.error { color: #8f332c; }
+    footer { border-top: 1px solid #b5bcb5; margin-top: 1rem; padding-top: 1.2rem; font-size: .86rem; color: #5c655f; }
+    [hidden] { display: none !important; }
+    @media (max-width: 650px) { main { padding: 1.8rem 1.1rem 3rem; } header { display: block; } header button { margin-top: 1.3rem; } .row { display: block; } .row button { margin-top: .8rem; } .step { grid-template-columns: 28px minmax(0, 1fr); gap: .5rem; } .mode { font-size: .84rem; padding: .65rem; } select { width: 100%; } }
+  </style>
+</head>
+<body>
+  <div class="mode" role="note">Invented offline fixtures / not live Qloo</div>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Local interaction preview</p>
+        <h1>Taste Workbench</h1>
+        <p class="intro">A phrase is a starting point, not a decision. Inspect the returned choices, confirm one yourself, then request a three-item shortlist.</p>
+      </div>
+      <button class="secondary" id="reset" type="button">Reset session</button>
+    </header>
+
+    <div class="status" id="status" role="status" aria-live="polite">Connecting to this local session…</div>
+    <section class="step" aria-labelledby="resolve-title">
+      <div class="number" aria-hidden="true">01</div>
+      <div>
+        <h2 id="resolve-title">Describe a taste</h2>
+        <p class="hint">These fixed examples show the workflow. Your phrase does not change the invented fixture candidates.</p>
+        <form id="resolve-form">
+          <div class="row">
+            <div class="grow"><label class="caption" for="query">A short phrase · up to 80 characters</label><input id="query" name="query" type="text" maxlength="80" required value="quiet and curious" autocomplete="off"></div>
+            <button id="resolve" type="submit" disabled>Find choices</button>
+          </div>
+        </form>
+        <details id="resolve-evidence" hidden><summary>Inspect search source</summary><pre id="resolve-source"></pre></details>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="confirm-title">
+      <div class="number" aria-hidden="true">02</div>
+      <div>
+        <h2 id="confirm-title">Choose, then confirm</h2>
+        <p class="hint">Nothing is selected automatically. Confirmation records your exact offered tag in this session.</p>
+        <form id="confirm-form">
+          <fieldset id="choices" disabled><legend>Returned choices</legend><p class="hint" id="choice-placeholder">Find choices in step 1 to continue.</p></fieldset>
+          <button id="confirm" type="submit" disabled>Confirm selected tag</button>
+        </form>
+        <p id="confirmed" hidden></p>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="recommend-title">
+      <div class="number" aria-hidden="true">03</div>
+      <div>
+        <h2 id="recommend-title">Inspect the shortlist</h2>
+        <p class="hint">A confirmation allows one category request. An identical repeat reads the cached result. Confirm a new choice to change category.</p>
+        <form id="recommend-form"><div class="row"><div><label class="caption" for="target">Category</label><select id="target" disabled><option value="movie">Movies</option><option value="book">Books</option><option value="artist">Artists</option></select></div><button id="recommend" type="submit" disabled>Show 3 recommendations</button></div></form>
+        <p id="result-note" class="meta" hidden></p>
+        <ol id="shortlist" class="shortlist"></ol>
+        <details id="recommend-evidence" hidden><summary>Inspect recommendation source and execution</summary><pre id="recommend-source"></pre></details>
+      </div>
+    </section>
+    <footer><p id="session-state">Session state is kept in process memory only.</p><p>This preview reads no credentials, calls no Qloo API and invokes no LLM. It does not verify public judge access. All labels and titles prefixed [FICTIONAL] are invented. Close the server to discard all sessions.</p></footer>
+  </main>
+  <script nonce="__CSP_NONCE__">
+    "use strict";
+    const byId = (id) => document.getElementById(id);
+    let csrf = "", resolution = null, receipt = null, lockedTarget = null, busy = false;
+    function status(message, error = false) { byId("status").textContent = message; byId("status").classList.toggle("error", error); }
+    function readiness(value) { byId("session-state").textContent = `Fixture backend calls: ${value.backend_calls} / ${value.backend_call_limit} local safeguard. Real Qloo API calls: 0. Receipt lifetime: up to 15 minutes.`; }
+    function controls() {
+      byId("reset").disabled = busy || !csrf; byId("resolve").disabled = busy || !csrf;
+      byId("query").disabled = busy; byId("choices").disabled = busy || !resolution || !!receipt;
+      byId("confirm").disabled = busy || !resolution || !!receipt || !document.querySelector('input[name="tag"]:checked');
+      byId("target").disabled = busy || !receipt || !!lockedTarget; byId("recommend").disabled = busy || !receipt;
+    }
+    async function request(path, payload) {
+      const options = { credentials: "same-origin", cache: "no-store" };
+      if (payload !== undefined) { options.method = "POST"; options.headers = { "Content-Type": "application/json", "X-Preview-CSRF": csrf }; options.body = JSON.stringify(payload); }
+      const response = await fetch(path, options), body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Local request failed");
+      if (body.csrf) csrf = body.csrf;
+      if (body.readiness) readiness(body.readiness);
+      if (body.result && body.result.status === "error") throw new Error(body.result.error.message);
+      return body;
+    }
+    async function action(fn) { if (busy) return; busy = true; controls(); try { await fn(); } catch (error) { status(error.message + " No automatic retry was attempted.", true); } finally { busy = false; controls(); } }
+    function clearFlow() {
+      resolution = null; receipt = null; lockedTarget = null;
+      byId("choices").replaceChildren(); const legend = document.createElement("legend"); legend.textContent = "Returned choices"; byId("choices").append(legend);
+      byId("confirmed").hidden = true; byId("shortlist").replaceChildren(); byId("result-note").hidden = true;
+      for (const prefix of ["resolve", "recommend"]) { byId(prefix + "-evidence").hidden = true; byId(prefix + "-source").textContent = ""; }
+    }
+    function evidence(prefix, result) { byId(prefix + "-source").textContent = JSON.stringify({ mode: result.mode, data_source: result.data_source, provenance: result.canonical.provenance, execution: result.canonical.execution }, null, 2); byId(prefix + "-evidence").hidden = false; }
+    byId("resolve-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      const query = byId("query").value.trim(); if (!query) throw new Error("Enter a short taste phrase.");
+      clearFlow(); const {result} = await request("/api/tool", {name: "taste_resolve", arguments: {query}});
+      if (result.status !== "needs_confirmation") { status("No choices returned. No recommendation was attempted."); return; }
+      resolution = result.resolution_id;
+      for (const [index, candidate] of result.candidates.entries()) {
+        const label = document.createElement("label"); label.className = "choice";
+        const radio = document.createElement("input"); radio.type = "radio"; radio.name = "tag"; radio.value = candidate.id; radio.required = true; radio.id = "tag-" + index;
+        const text = document.createElement("span"), name = document.createElement("strong"), id = document.createElement("small"); name.textContent = candidate.name; id.textContent = candidate.id; text.append(name, id); label.append(radio, text); byId("choices").append(label);
+        radio.addEventListener("change", controls);
+      }
+      evidence("resolve", result); status("Choose one returned tag. Your choice has not been confirmed.");
+    }); });
+    byId("confirm-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      const selected = document.querySelector('input[name="tag"]:checked'); if (!selected || !resolution) throw new Error("Select one returned tag first.");
+      const {result} = await request("/api/tool", {name: "taste_confirm", arguments: {resolution_id: resolution, selected_tag_id: selected.value}});
+      receipt = result.receipt; byId("confirmed").textContent = "Confirmed by your click: " + result.selected_tag.name; byId("confirmed").hidden = false; status("Choice confirmed locally. Select a category for your shortlist.");
+    }); });
+    byId("recommend-form").addEventListener("submit", (event) => { event.preventDefault(); action(async () => {
+      if (!receipt) throw new Error("Confirm one returned tag first.");
+      const target = lockedTarget || byId("target").value;
+      const {result} = await request("/api/tool", {name: "taste_recommend", arguments: {receipt, target_type: target, limit: 3}}); lockedTarget = target;
+      byId("shortlist").replaceChildren();
+      for (const item of result.shortlist) { const row = document.createElement("li"), name = document.createElement("strong"), detail = document.createElement("small"); name.textContent = item.name; detail.textContent = item.entity_id + " · " + item.type; row.append(name, detail); byId("shortlist").append(row); }
+      byId("result-note").textContent = (result.cached_receipt_replay ? "Cached receipt replay. " : "Fresh fixture result. ") + result.explanation; byId("result-note").hidden = false;
+      evidence("recommend", result); status(result.cached_receipt_replay ? "Same request, cached result. No additional fixture backend call." : "Three invented examples returned. Inspect the source details below.");
+    }); });
+    byId("reset").addEventListener("click", () => action(async () => {
+      clearFlow(); status("Starting a fresh local session…");
+      // Explicit reset can recover an expired cookie and stale CSRF token.
+      // This only obtains local session state; it never resolves or recommends.
+      await request("/api/session");
+      await request("/api/reset", {});
+      status("New local session. Previous choices and receipts were cleared.");
+    }));
+    action(async () => { await request("/api/session"); status("Ready. Start with a short phrase; every result here is an invented fixture."); });
+  </script>
+</body>
+</html>

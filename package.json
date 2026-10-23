@@ -1,0 +1,10 @@
+{
+  "name": "qloo-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A resolve-confirm-recommend MCP tool with bounded Qloo access",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22.19.0" },
+  "dependencies": { "@qloo/qloo-harness": "0.1.26" }
+}

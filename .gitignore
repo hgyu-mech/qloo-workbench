@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+*.log
+private/
+node_modules/
+*.private.*
+access-policy*.json
+!access-policy.example.json
